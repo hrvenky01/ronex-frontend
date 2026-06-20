@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358902006086",
+    "project_id": "ronex-88c3a",
+    "storage_bucket": "ronex-88c3a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358902006086:android:da7a22f7cd5b2ea7be2547",
+        "android_client_info": {
+          "package_name": "com.ronex"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxIekOlEINaubFbaHv6Ti9AQlGvK6pLsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
