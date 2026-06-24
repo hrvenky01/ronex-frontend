@@ -2,12 +2,12 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API = axios.create({
-  baseURL: 'https://ronex-backend.onrender.com',
-  timeout: 15000,
+  baseURL: 'https://ronex-backend.onrender.com/api',
+  timeout: 30000,
 });
 
-// 🔐 JWT Auto Attach
-API.interceptors.request.use(async (config) => {
+/* 🔐 JWT AUTO ATTACH */
+API.interceptors.request.use(async config => {
   const token = await AsyncStorage.getItem('TOKEN');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

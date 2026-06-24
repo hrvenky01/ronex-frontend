@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,120 +6,41 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
 
-export default function OtpScreen() {
-  const route = useRoute();
-  const navigation = useNavigation();
+export default function OtpScreen({ navigation }) {
+  const [otp, setOtp] = useState('');
 
-  const { phone } = route.params;
-
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [referralCode, setReferralCode] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const inputs = useRef([]);
-
-  const handleChange = (text, index) => {
-    if (text.length > 1) return;
-
-    const newOtp = [...otp];
-    newOtp[index] = text;
-    setOtp(newOtp);
-
-    if (text && index < 5) {
-      inputs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleBackspace = (key, index) => {
-    if (key === 'Backspace' && otp[index] === '' && index > 0) {
-      inputs.current[index - 1]?.focus();
-    }
-  };
-
-  const onVerifyOtp = async () => {
-    const finalOtp = otp.join('');
-
-    if (finalOtp.length !== 6) {
-      Alert.alert('Invalid OTP', 'Enter 6-digit OTP');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      // 🔥 API CALL (later replace URL)
-      /*
-      await axios.post("/api/auth/verify-otp", {
-        phone,
-        otp: finalOtp,
-        referralCode: referralCode || null,
+  const handleVerify = () => {
+    // Dummy OTP check
+    if (otp === '123456') {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MainTabs' }],
       });
-      */
-
-      // TEMP SUCCESS
-      setTimeout(() => {
-        setLoading(false);
-        navigation.replace('MainTabs');
-      }, 800);
-
-    } catch (e) {
-      setLoading(false);
-      Alert.alert('Error', 'OTP verification failed');
+    } else {
+      Alert.alert('Invalid OTP', 'Use demo OTP: 123456');
     }
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Enter OTP</Text>
 
-      <Text style={styles.title}>OTP Verification</Text>
-      <Text style={styles.subtitle}>OTP sent to {phone}</Text>
-
-      {/* OTP BOXES */}
-      <View style={styles.otpRow}>
-        {otp.map((value, index) => (
-          <TextInput
-            key={index}
-            ref={(ref) => (inputs.current[index] = ref)}
-            style={styles.otpBox}
-            keyboardType="number-pad"
-            maxLength={1}
-            value={value}
-            onChangeText={(text) => handleChange(text, index)}
-            onKeyPress={({ nativeEvent }) =>
-              handleBackspace(nativeEvent.key, index)
-            }
-            autoFocus={index === 0}
-          />
-        ))}
-      </View>
-
-      {/* REFERRAL CODE */}
       <TextInput
-        style={styles.referralInput}
-        placeholder="Referral Code (optional)"
-        placeholderTextColor="#999"
-        value={referralCode}
-        onChangeText={setReferralCode}
-        autoCapitalize="characters"
+        style={styles.input}
+        placeholder="6 digit OTP"
+        keyboardType="number-pad"
+        maxLength={6}
+        value={otp}
+        onChangeText={setOtp}
       />
 
-      {/* VERIFY BUTTON */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={onVerifyOtp}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Verify OTP</Text>
-        )}
+      <TouchableOpacity style={styles.btn} onPress={handleVerify}>
+        <Text style={styles.btnText}>Verify OTP</Text>
       </TouchableOpacity>
 
+      <Text style={styles.hint}>Demo OTP: 123456</Text>
     </View>
   );
 }
@@ -127,56 +48,40 @@ export default function OtpScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 24,
     justifyContent: 'center',
+    padding: 24,
+    backgroundColor: '#fff',
   },
   title: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: '#111',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 26,
-  },
-  otpRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  otpBox: {
-    width: 45,
-    height: 55,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
-  },
-  referralInput: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    paddingHorizontal: 14,
-    marginBottom: 24,
-    color: '#000',
-  },
-  button: {
-    height: 50,
-    backgroundColor: '#000',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 30,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    padding: 15,
+    fontSize: 18,
+    textAlign: 'center',
+    letterSpacing: 10,
+  },
+  btn: {
+    backgroundColor: '#000',
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  btnText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  hint: {
+    marginTop: 15,
+    textAlign: 'center',
+    color: '#777',
   },
 });
