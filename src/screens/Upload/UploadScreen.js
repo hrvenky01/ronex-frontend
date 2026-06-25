@@ -55,7 +55,7 @@ export default function UploadScreen() {
       setUploading(true);
 
       const res = await fetch(
-        'http://YOUR_PC_IP:8080/api/reels/upload-video',
+        'https://ronex-backend.onrender.com/api/reels/upload-video',
         {
           method: 'POST',
           body: formData,
