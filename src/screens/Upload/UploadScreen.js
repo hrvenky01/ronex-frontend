@@ -41,14 +41,14 @@ export default function UploadScreen() {
 
     const formData = new FormData();
 
-    // 🔥 MUST BE "file" (backend expects this)
+    // 🔥 Backend expects key = "file"
     formData.append('file', {
       uri: video.uri,
       type: video.type || 'video/mp4',
       name: video.fileName || 'reel.mp4',
     });
 
-    // 🔥 MUST SEND userName
+    // 🔥 TEMP userName (JWT later)
     formData.append('userName', 'RonexUser');
 
     try {
@@ -65,7 +65,9 @@ export default function UploadScreen() {
         }
       );
 
-      if (!res.ok) throw new Error('Upload failed');
+      if (!res.ok) {
+        throw new Error('Upload failed');
+      }
 
       const data = await res.json();
       console.log('UPLOAD SUCCESS:', data);
@@ -73,9 +75,9 @@ export default function UploadScreen() {
       Alert.alert('Success ✅', 'Reel uploaded successfully');
       setVideo(null);
 
-    } catch (e) {
-      console.log(e);
-      Alert.alert('Upload Failed ❌', e.message);
+    } catch (err) {
+      console.log(err);
+      Alert.alert('Upload Failed ❌', err.message);
     } finally {
       setUploading(false);
     }
@@ -83,7 +85,6 @@ export default function UploadScreen() {
 
   return (
     <View style={styles.container}>
-
       <Text style={styles.title}>Upload Reel</Text>
 
       {video && (
@@ -119,7 +120,6 @@ export default function UploadScreen() {
           </>
         )}
       </TouchableOpacity>
-
     </View>
   );
 }
